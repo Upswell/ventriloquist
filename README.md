@@ -18,8 +18,19 @@ Run as Administrator on the initial launch, this will create the necessary urlac
 -----------------------
 Using either the system tray (Windows) or the menu bar (OS X), you can configure the server, as well as test the API.
 
+### API
+Endpoint: /api/tts
+
+The API for TTS accepts a JSON object with the following parameters:
+
+Variable | Mandatory | Default | Description
+--- | --- | --- | ---
+``Text`` | Y | - | Text to be spoken by the speech synthesizer.
+``Speed`` | N | 5 | The voice rate. Valid range is 0-10
+``Language`` | N | "en" | Language options are currently "en" and "fr"
+``Voice`` | N | 0 | Index of the voice you want to use
 A sample API call:
 
-    			var client = new HttpClient ();
-			client.PostAsync (new Uri("http://localhost:7888/api/tts"),
-			                  new StringContent("{Text: 'The ripe taste of cheese improves with age.',Speed: 5,Language: 'en',Voice: 0,Interrupt: true}", System.Text.Encoding.UTF8, "application/json"));
+    var client = new HttpClient ();
+    client.PostAsync (new Uri("http://localhost:7888/api/tts"),
+			          new StringContent("{Text: 'The ripe taste of cheese improves with age.',Speed: 5,Language: 'en',Voice: 0,Interrupt: true}", System.Text.Encoding.UTF8, "application/json"));
