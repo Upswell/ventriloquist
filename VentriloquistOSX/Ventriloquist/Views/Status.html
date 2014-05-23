@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ventriloquist TTS Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/content/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    .metric {
+        font-size: 40px;
+        line-height: 45px!important;
+    }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Ventriloquist</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/status">Status</a></li>
+              <li class=""><a href="/config">Config</a></li>
+              <li class=""><a href="/api/test">API</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+		<legend>Server Status</legend>
+		<div class="row">
+	        <div class="span12">
+	            <table class="table table-striped table-condensed table-bordered">
+	                <thead>
+	                	<tr>
+	                		<th width="150">Metric</th>
+	                		<th>Counter</th>
+	                	</tr>
+	                </thead>
+	        		<tbody class="stripe">
+	                    <tr>
+	                        <td>Status</td>
+	                        <td><span id="status" class="label label-important">Idle</span></td>
+	                    </tr>
+	                    <tr>
+	                        <td>Queued Requests</td>
+	                        <td id="queue" class="metric">0</td>
+	                    </tr>
+	                    <tr>
+	                        <td>Processed Requests</td>
+	                        <td id="total" class="metric">0</td>
+	                    </tr>
+	        		</tbody>
+	            </table>
+	        </div>
+	    </div>
+
+		<div class="modal hide fade" id="modalConnected">
+			<div class="modal-header">
+				<h3>Server Status</h3>
+			</div>
+			<div class="modal-body">
+			<p class="alert alert-error">
+				<strong>No connection.</strong><br><br>
+				- Is the server running?<br>
+			</p>
+			<a class="btn btn-primary" href="/status">Connect</a>
+			</div>
+		</div>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/content/js/jquery.js"></script>
+    <script src="/content/js/bootstrap.js"></script>
+    <script src="/content/js/websocket.js"></script>
+	<script>
+	$(document).ready(function () {
+		$('#modalConnected').modal({'show' : true, 'backdrop' : 'static'});
+	 	ws = $.websocket("ws://localhost:7889", {
+	    	open: function() {
+	    		$('#modalConnected').modal('hide');
+	    	},
+	    	close: function() {
+	    		$('#modalConnected').modal('show');
+	    	},
+	    	events: {
+	    		status: function(event) {
+	    			if(event.eventdata.IsSpeaking) {
+	    				$('#status').addClass('label-success');
+	    				$('#status').html('Speaking...');
+	    			} else {
+	    				$('#status').removeClass('label-success');
+	    				$('#status').html('Idle');
+	    			}
+	    			$('#queue').html(event.eventdata.QueuedRequests);
+	    			$('#total').html(event.eventdata.ProcessedRequests);
+	    		}
+	    	}
+	    });
+	});
+	</script>
+  </body>
+</html>
+
+
+

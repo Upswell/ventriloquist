@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ventriloquist TTS Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/content/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Ventriloquist</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class=""><a href="/status">Status</a></li>
+              <li class=""><a href="/config">Config</a></li>
+              <li class="active"><a href="/api/test">API</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <legend>TTS Test</legend>
+	  <div style="margin-top: 15px;" id="profiles">
+		<span>API endpoint:  http://127.0.0.1:7888/api/tts</span>
+	  	<form>
+	  		<textarea id="data" style="width: 600px; height: 200px;">
+{
+"Text": "The ripe taste of cheese improves with age.",
+"Speed": 5,
+"Language": "en",
+"Voice": 0,
+"Interrupt": true
+}
+	  		</textarea>
+	  	</form>
+		<button class="btn" onclick="doTest();">Test</button>
+	  </div>
+
+    </div> <!-- /container -->
+	  
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/content/js/jquery.js"></script>
+    <script src="/content/js/bootstrap.js"></script>
+	<script>
+	function doTest()
+	{
+	 	$.ajax({
+	          url: '/api/tts',
+	          type: 'POST',
+	          data: $('#data').val(),
+	          contentType: 'application/json'
+	    });
+	}
+	$(document).ready(function () {
+
+	});
+	</script>
+  </body>
+</html>
+
+
