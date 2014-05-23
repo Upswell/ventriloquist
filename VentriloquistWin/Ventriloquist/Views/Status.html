@@ -96,7 +96,7 @@
 	<script>
 	$(document).ready(function () {
 		$('#modalConnected').modal({'show' : true, 'backdrop' : 'static'});
-	 	ws = $.websocket("ws://localhost:7889", {
+	 	ws = $.websocket("ws://"+window.location.hostname+":7889", {
 	    	open: function() {
 	    		$('#modalConnected').modal('hide');
 	    	},
