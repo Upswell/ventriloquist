@@ -103,13 +103,14 @@ namespace Ventriloquist
 
             for (int deviceId = 0; deviceId < WaveOut.DeviceCount; deviceId++)
             {
+
                 var capabilities = WaveOut.GetCapabilities(deviceId);
                 //Console.WriteLine(String.Format("Device {0} ({1})", deviceId, capabilities.ProductName));
                 var deviceItem = new MenuItem(capabilities.ProductName, OnDeviceConfig);
                 deviceItem.Tag = deviceId;
-                //if(deviceId == int.Parse(config.OutputDevice)) {
-                //    deviceItem.Checked = true;
-                //}
+                if(config.OutputDevice.Equals("NOPE")) {
+                    config.OutputDevice = capabilities.ProductName;
+                }
                 if(capabilities.ProductName == config.OutputDevice) {
                     deviceItem.Checked = true;
                     OutputDeviceId = deviceId;

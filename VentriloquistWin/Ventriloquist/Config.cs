@@ -45,7 +45,7 @@ namespace Ventriloquist
                     cmd.CommandText = "CREATE TABLE Config (ConfigId INTEGER PRIMARY KEY AUTOINCREMENT, Setting VARCHAR(20), SettingValue varchar(200))";
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "INSERT INTO Config(Setting, SettingValue) VALUES('outputdevice', '0')";
+                    cmd.CommandText = "INSERT INTO Config(Setting, SettingValue) VALUES('outputdevice', 'NOPE')";
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "INSERT INTO Config(Setting, SettingValue) VALUES('localonly', '0')";
                     cmd.ExecuteNonQuery();
