@@ -205,6 +205,7 @@ namespace Ventriloquist
 					}
 					SpeechQueue.Enqueue(r);
 					RequestCount++;
+
 				}
 				var eventdata = new Hashtable();
 				eventdata.Add("ProcessedRequests", RequestCount);
