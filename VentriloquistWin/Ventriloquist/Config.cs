@@ -99,11 +99,11 @@ namespace Ventriloquist
             return instance;
         }
 
-        private void OnPropertyChanged()
+        private void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(""));
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
 
@@ -117,7 +117,7 @@ namespace Ventriloquist
             {
                 Console.WriteLine("set output to: " + value);
                 SetSetting("outputdevice", value);
-                OnPropertyChanged();
+                OnPropertyChanged("outputdevice");
             }
         }
 
@@ -131,7 +131,7 @@ namespace Ventriloquist
             set
             {
                 SetSetting("localonly", Convert.ToInt16(value).ToString());
-                OnPropertyChanged();
+                OnPropertyChanged("localonly");
             }
         }
 

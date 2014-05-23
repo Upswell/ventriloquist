@@ -75,6 +75,14 @@ namespace Ventriloquist
                 Directory.CreateDirectory(appsupportpath);
             }
             config = Config.GetInstance();
+            config.PropertyChanged += async (object sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+            {
+                if (e.PropertyName.Equals("localonly"))
+                {
+                    server.Stop();
+                    InitHTTPServer();
+                }
+            };
 
             trayMenu = new ContextMenu();
 
@@ -257,14 +265,7 @@ namespace Ventriloquist
             speechtimer.Enabled = true;
             speechtimer.Start();
 
-            /* Setup HTTP server and start */
-            var hostConfiguration = new HostConfiguration
-            {
-                UrlReservations = new UrlReservations() { CreateAutomatically = true }
-            };
-            StaticConfiguration.DisableErrorTraces = false;
-            server = new NancyHost(hostConfiguration, GetUriParams(7888, config.LocalOnly));
-            server.Start();
+            InitHTTPServer();
 
             websocketserver = new WebSocketServer("ws://localhost:7889");
 
@@ -296,6 +297,19 @@ namespace Ventriloquist
 
         }
 
+        private void InitHTTPServer()
+        {
+            /* Setup HTTP server and start */
+            var hostConfiguration = new HostConfiguration
+            {
+                UrlReservations = new UrlReservations() { CreateAutomatically = true }
+            };
+            hostConfiguration.RewriteLocalhost = false;
+            StaticConfiguration.DisableErrorTraces = false;
+            server = new NancyHost(hostConfiguration, GetUriParams(7888, config.LocalOnly));
+            server.Start();
+        }
+
         void output_PlaybackStopped(object sender, StoppedEventArgs e)
         {
             sound.PlaybackStopped -= output_PlaybackStopped;
@@ -321,7 +335,7 @@ namespace Ventriloquist
 
         private void OnVoiceConfig(object sender, EventArgs e)
         {
-            Process.Start("http://localhost:7888/config");   
+            Process.Start("http:/127.0.0.1:7888/config");   
         }
 
         private void OnDeviceConfig(object sender, EventArgs e)
@@ -386,10 +400,6 @@ namespace Ventriloquist
                         uriParams.Add(new Uri(hostAddressUri));
                     }
                 }
-            }
-            else
-            {
-                logger.Warn("There is a bug in the current runtime that binds the HTTPListener to all interfaces, regardless of what you configure.  This will be fixed shortly.");
             }
 
             // Host name URI
