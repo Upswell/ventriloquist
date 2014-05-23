@@ -82,6 +82,15 @@ namespace Ventriloquist
 			config.PropertyChanged += async (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
 				if(e.PropertyName.Equals("localonly")) {
 					server.Stop();
+					foreach(var socket in allSockets) {
+						try {
+							socket.Close();
+						} catch(Exception ex) {
+
+						}
+					}
+					websocketserver.ListenerSocket.Close();
+					websocketserver.Dispose();
 					InitHTTPServer();
 				}
 			};
@@ -245,7 +254,23 @@ namespace Ventriloquist
 
 			InitHTTPServer ();
 
-			websocketserver = new WebSocketServer ("ws://localhost:7889");
+		}
+
+		private void InitHTTPServer()
+		{
+			/* Setup HTTP server and start */
+			var hostConfiguration = new HostConfiguration {
+				UrlReservations = new UrlReservations() { CreateAutomatically = true }
+			};
+			hostConfiguration.RewriteLocalhost = false;
+			StaticConfiguration.DisableErrorTraces = false;
+			server = new NancyHost (hostConfiguration, GetUriParams(7888, config.LocalOnly));
+			server.Start ();
+			string wslistener = "ws://localhost:7889";
+			if(!config.LocalOnly) {
+				wslistener = "ws://0.0.0.0:7889";
+			}
+			websocketserver = new WebSocketServer (wslistener);
 
 			websocketserver.Start(socket =>
 				{
@@ -272,18 +297,6 @@ namespace Ventriloquist
 					};
 
 				});
-		}
-
-		private void InitHTTPServer()
-		{
-			/* Setup HTTP server and start */
-			var hostConfiguration = new HostConfiguration {
-				UrlReservations = new UrlReservations() { CreateAutomatically = true }
-			};
-			hostConfiguration.RewriteLocalhost = false;
-			StaticConfiguration.DisableErrorTraces = false;
-			server = new NancyHost (hostConfiguration, GetUriParams(7888, config.LocalOnly));
-			server.Start ();
 		}
 
 		private float Scale(int value , int min, int max, int minScale, int maxScale)
