@@ -79,6 +79,12 @@ namespace Ventriloquist
 			//	Directory.CreateDirectory (appsupportpath);
 			//}
 			config = Config.GetInstance();
+			config.PropertyChanged += async (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
+				if(e.PropertyName.Equals("localonly")) {
+					server.Stop();
+					InitHTTPServer();
+				}
+			};
 		}
 
 		public override void FinishedLaunching (NSObject notification)
@@ -127,7 +133,7 @@ namespace Ventriloquist
 				}
 				deviceList.AddItem (test);
 			}
-
+				
 			var daItem = new NSMenuItem ("Local Connections Only", 
 				(a, b) => {
 					NSMenuItem theItem = (NSMenuItem)a;
@@ -237,13 +243,7 @@ namespace Ventriloquist
 			speechtimer.Enabled = true;
 			speechtimer.Start ();
 
-			/* Setup HTTP server and start */
-			var hostConfiguration = new HostConfiguration {
-				UrlReservations = new UrlReservations() { CreateAutomatically = true }
-			};
-			StaticConfiguration.DisableErrorTraces = false;
-			server = new NancyHost (hostConfiguration, GetUriParams(7888, config.LocalOnly));
-			server.Start ();
+			InitHTTPServer ();
 
 			websocketserver = new WebSocketServer ("ws://localhost:7889");
 
@@ -272,6 +272,18 @@ namespace Ventriloquist
 					};
 
 				});
+		}
+
+		private void InitHTTPServer()
+		{
+			/* Setup HTTP server and start */
+			var hostConfiguration = new HostConfiguration {
+				UrlReservations = new UrlReservations() { CreateAutomatically = true }
+			};
+			hostConfiguration.RewriteLocalhost = false;
+			StaticConfiguration.DisableErrorTraces = false;
+			server = new NancyHost (hostConfiguration, GetUriParams(7888, config.LocalOnly));
+			server.Start ();
 		}
 
 		private float Scale(int value , int min, int max, int minScale, int maxScale)
@@ -364,8 +376,6 @@ namespace Ventriloquist
 						uriParams.Add (new Uri (hostAddressUri));
 					}
 				}
-			} else {
-				logger.Info ("There is a bug in the current runtime that binds the HTTPListener to all interfaces, regardless of what you configure.  This will be fixed shortly.");
 			}
 
 			// Host name URI
