@@ -108,6 +108,7 @@
     <Folder Include="TTS\" />
     <Folder Include="lib\" />
     <Folder Include="scripts\" />
+    <Folder Include="licenses\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -174,6 +175,10 @@
     <None Include="content\img\spinner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="licenses\newtonsoft.txt" />
+    <None Include="licenses\nancy.txt" />
+    <None Include="licenses\fleck.txt" />
+    <None Include="licenses\log4net.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

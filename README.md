@@ -10,6 +10,9 @@ A text-to-speech API server for OS X and Windows
 Download the release for your platform.
 
 #### OSX
+
+The application is unsigned, so you will have to make sure you have System Preferences->Security & Privacy->General->Allow applications downloaded from: Anywhere
+
 Launch the application.
 
 #### Windows 8
@@ -17,6 +20,11 @@ Run as Administrator on the initial launch, this will create the necessary urlac
 
 -----------------------
 Using either the system tray (Windows) or the menu bar (OS X), you can configure the server, as well as test the API.
+
+Configuration data is stored in a SQLite database.  The database locations for each platform are:
+
+OSX: ~/Library/Application Support/Ventriloquist/config.db
+Windows: %HOME%/AppData/Local/Ventriloquist/config.db
 
 ### API
 Endpoint: /api/tts
@@ -29,6 +37,7 @@ Variable | Mandatory | Default | Description
 ``Speed`` | N | 5 | The voice rate. Valid range is 0-10
 ``Language`` | N | "en" | Language options are currently "en" and "fr"
 ``Voice`` | N | 0 | Index of the voice you want to use
+
 A sample API call:
 
     var client = new HttpClient ();
