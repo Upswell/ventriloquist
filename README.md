@@ -1,7 +1,7 @@
 # Ventriloquist
 -----------------------
 
-A text-to-speech API server for OS X and Windows
+A text-to-speech API server for OS X 10.8+ and Windows 8.1+
 
 -----------------------
 
