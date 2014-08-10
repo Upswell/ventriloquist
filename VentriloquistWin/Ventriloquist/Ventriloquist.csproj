@@ -125,11 +125,12 @@
     <None Include="licenses\newtonsoft.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TTS\" />
-    <Folder Include="licenses\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="content\css\bootstrap.css">

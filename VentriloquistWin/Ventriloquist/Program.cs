@@ -68,7 +68,7 @@ namespace Ventriloquist
             // Configure logger
             string path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "log4net.config");
             XmlConfigurator.ConfigureAndWatch(new FileInfo(path));
-            logger.Info("Ventriliquest 1.0 Starting up...");
+            logger.Info("Ventriliquest Starting up...");
 
             if (!Directory.Exists(appsupportpath))
             {
@@ -129,6 +129,7 @@ namespace Ventriloquist
 
             var voiceconfigItem = new MenuItem("Voice Configuration", OnVoiceConfig);
 
+            trayMenu.MenuItems.Add(new MenuItem("Version 1.1"));
             trayMenu.MenuItems.Add(outputDevice);
             trayMenu.MenuItems.Add(networkconfigItem);
             trayMenu.MenuItems.Add(voiceconfigItem);
@@ -188,7 +189,9 @@ namespace Ventriloquist
                         // clear queue
                         SpeechQueue.Clear();
                     }
-                    SpeechQueue.Enqueue(r);
+                    if(!r.Reset) {
+                        SpeechQueue.Enqueue(r);
+                    }
                     RequestCount++;
                 }
                 
@@ -204,7 +207,7 @@ namespace Ventriloquist
 
             // when this timer fires, it will pull off of the speech queue and speak it
             // the long delay also adds a little pause between tts requests.
-            speechtimer = new System.Timers.Timer(1000);
+            speechtimer = new System.Timers.Timer(250);
             speechtimer.Elapsed += (object sender, ElapsedEventArgs ev) =>
             {
                 if (IsSpeaking.Equals(false))

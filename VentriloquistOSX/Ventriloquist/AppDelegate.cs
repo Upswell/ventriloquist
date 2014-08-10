@@ -115,7 +115,7 @@ namespace Ventriloquist
 				(a, b) => {
 
 				});
-					
+						
 			var deviceList = new NSMenu ();
 			outputItem.Submenu = deviceList;
 
@@ -165,6 +165,7 @@ namespace Ventriloquist
 			var voiceconfigItem = new NSMenuItem("Voice Configuration", 
 				(a, b) => Process.Start("http://127.0.0.1:7888/config"));
 
+			statusMenu.AddItem (new NSMenuItem("Version: 1.1"));
 			statusMenu.AddItem (outputItem);
 			statusMenu.AddItem (daItem);
 			statusMenu.AddItem (voiceconfigItem);
@@ -203,7 +204,9 @@ namespace Ventriloquist
 						// clear queue
 						SpeechQueue.Clear();
 					}
-					SpeechQueue.Enqueue(r);
+					if(!r.Reset) {
+						SpeechQueue.Enqueue(r);
+					}
 					RequestCount++;
 
 				}
@@ -219,7 +222,7 @@ namespace Ventriloquist
 
 			// when this timer fires, it will pull off of the speech queue and speak it
 			// the 1000ms delay also adds a little pause between tts requests.
-			speechtimer = new System.Timers.Timer (1000);
+			speechtimer = new System.Timers.Timer (250);
 			speechtimer.Elapsed += (object sender, ElapsedEventArgs e) => {
 				if(IsSpeaking.Equals(false)) {
 					if(SpeechQueue.Count > 0) {

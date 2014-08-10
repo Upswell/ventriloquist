@@ -47,6 +47,15 @@ namespace Ventriloquist
                 producer.QueueRequest(ttsrequest);
                 return HttpStatusCode.OK;
             };
+
+            Post["/api/reset", true] = async (parameters, context) =>
+            {
+                var ttsrequest = new TTSRequest();
+                ttsrequest.Interrupt = true;
+                ttsrequest.Reset = true;
+                producer.QueueRequest(ttsrequest);
+                return HttpStatusCode.OK;
+            };
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Ventriloquist
 		public string Language { get; set; }
 		public int Voice { get; set; }
 		public bool Interrupt { get; set; }
+		public bool Reset { get; set; }
 
 		public TTSRequest ()
 		{
@@ -18,6 +19,7 @@ namespace Ventriloquist
 			Language = "en";
 			Voice = 1;
 			Interrupt = false;
+			Reset = false;
 		}
 	}
 }
